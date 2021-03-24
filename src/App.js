@@ -1,25 +1,39 @@
-import logo from './logo.svg';
+import React, { useState, useEffect } from 'react'
+import Todo from './Todo';
+import Form from './Form';
+import List from './List';
 import './App.css';
 
-function App() {
+const App = () => {
+
+  const [todos, setTodos] = useState([])
+
+  useEffect(() => {
+
+    //localStorage.clear();
+    let arr = localStorage.getItem('todos');
+    if (arr !== null) {
+
+      setTodos(JSON.parse(arr));
+    }
+
+    return () => { }
+  }, []);
+
+  const handleForm = (title, description) => {
+
+    setTodos([...todos, Todo(title, description)]);
+    //setTodos(prevState => [...prevState, Todo(title, description)]);
+    localStorage.setItem('todos', JSON.stringify([...todos, Todo(title, description)]));
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <section>
+      <div className="toCenter">
+        <Form func={handleForm} />
+        <List todos={todos} />
+      </div>
+    </section >
   );
 }
-
 export default App;
